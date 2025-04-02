@@ -1,0 +1,72 @@
+Feature: Schneider Website UI and Functional Testing
+
+Scenario: Verify homepage loads properly
+
+Given I have opened the Schneider Electric Website
+Then the homepage should load within 3-5 seconds without layout issues
+
+
+
+Scenario: Verify the top navigation menu 
+Given I open the Schneider Electric website
+When I check the navigation menu
+Then the menu should be displayed properly
+And each menu item should be clickable and navigate to the correct page
+
+Scenario: Verify search functionality returns relevant results
+Given I open the Schneider Electric website
+When I enter "EcoStruxure" in the search bar
+And I click the search button
+Then the search result should display relevant pages for "EcoStruxure"
+
+Scenario: Verify contact form submission
+Given I navigate to the Contact Us page
+When I fill in all required details
+And I click the Submit button
+Then I should see a confirmation message
+And an email should be sent to the user
+
+Scenario: Verify all footer links are working
+Given I open the Schneider Electric Website
+When I scroll to the footer section
+Then all footer links should be working and navigate to the correct pages
+
+
+Step Definition
+
+from TestComplete import *
+import time
+
+def Given_I_open_the_Schneider_Electric_website():
+    Browsers.Item[btChrome].Run("https://www.se.com/in/en/")
+    Aliases.browser.Page.Wait()
+
+def Then_the_homepage_should_load_within_3_5_seconds():
+    assert Aliases.browser.Page.Exists
+
+def And_there_should_be_no_layout_issues():
+    assert Aliases.browser.Page.VisibleOnScreen
+
+def When_I_check_the_navigation_menu():
+    def When_I_check_the_navigation_menu():
+    nav_menu = Aliases.browser.Page.FindElement("#nav")
+    assert nav_menu.Exists
+
+def Then_it_should_be_displayed_properly():
+    assert Aliases.browser.Page.FindElement("#nav").VisibleOnScreen
+
+def When_I_enter_in_the_search_bar_and_click_search(search_text):
+    search_box = Aliases.browser.Page.FindElement("#search-box")
+    search_box.SetText(search_text)
+    search_box.Keys("[Enter]")
+
+def Then_relevant_results_for_should_be_displayed(search_text):
+    results = Aliases.browser.Page.FindElements(".search-result-item")
+    assert any(search_text in result.text for result in results)
+
+def When_I_scroll_to_the_footer_section():
+    Aliases.browser.Page.FindElement("footer").ScrollIntoView()
+
+def Then_all_footer_links_should_work_and_navigate_correctly():
+    footer_links = Aliases.browser.Page.FindElements("footer a")
+    assert all(link.getAttribute("href") for link in footer_links)
